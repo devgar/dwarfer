@@ -42,3 +42,20 @@ pub enum ShortUrlError {
     #[error("Invalid ShortUrl: it should contain only a-z, 0-9, . - _ +")]
     Invalid,
 }
+
+#[test]
+fn test_short_url_validation() {
+    assert!(ShortUrl::new("valid123").is_ok());
+    assert!(ShortUrl::new("INVALID").map(|value| value.as_str() == "invalid").unwrap_or(false)); // Should be normalized to lowercase
+    assert!(ShortUrl::new("invalid!").is_err());
+    assert!(ShortUrl::new("toolong".repeat(10)).is_err());
+}
+
+#[test]
+fn test_short_url_random() {
+    let url1 = ShortUrl::random();
+    let url2 = ShortUrl::random();
+    assert_ne!(url1, url2);
+    assert!(SHORTURL_RE.is_match(url1.as_str()));
+    assert!(SHORTURL_RE.is_match(url2.as_str()));
+}
