@@ -1,4 +1,3 @@
-// src/main.rs
 mod config;
 mod error;
 
@@ -42,7 +41,6 @@ async fn main() -> anyhow::Result<()> {
     let config = AppConfig::load()
         .expect("Couldn't load config");
 
-    // persistence
     let repo: Arc<dyn domain::repository::UrlReader>;
     let writer: Arc<dyn domain::repository::UrlWriter>;
 
@@ -58,9 +56,6 @@ async fn main() -> anyhow::Result<()> {
         let sqlite_repo = Arc::new(SqliteRepo { pool: pool.clone() });
         repo = sqlite_repo.clone();
         writer = sqlite_repo;
-
-        // Si es CLI y el comando es migrate, lo manejamos después o aquí.
-        // Pero el CLI parseará sus propios args.
     }
 
     #[cfg(feature = "repo-file")]
@@ -76,14 +71,12 @@ async fn main() -> anyhow::Result<()> {
         panic!("Debe activarse al menos una feature de repositorio (ej: repo-sqlite)");
     }
 
-    // Auth
     let api_key = config.api_key.as_deref().unwrap_or("default_api_key");
     let auth_service = Arc::new(crate::infrastructure::auth::apikey::StaticApiKeyService {
         valid_api_key: api_key.to_string(),
     });
     let auth_z_service = Arc::new(crate::infrastructure::auth::authorization_simple::AllowAllAuthorizationService);
 
-    // Casos de uso
     let create_use_case = Arc::new(crate::use_cases::create::CreateUseCase::new(writer.clone(), repo.clone()));
     let redirect_use_case = Arc::new(crate::use_cases::redirect::RedirectUseCase::new(repo.clone()));
     let manage_use_case = Arc::new(crate::use_cases::manage::ManageUseCase::new(writer.clone()));
@@ -92,7 +85,6 @@ async fn main() -> anyhow::Result<()> {
     {
         let args: Vec<String> = std::env::args().collect();
         if args.len() > 1 {
-            // Nota: En una app real, pasaríamos el pool directamente si es SQLite para migraciones
             #[cfg(feature = "repo-sqlite")]
             {
                 use sqlx::sqlite::SqlitePoolOptions;

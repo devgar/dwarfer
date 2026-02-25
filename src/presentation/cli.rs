@@ -1,4 +1,3 @@
-// src/presentation/cli.rs
 use clap::{Parser, Subcommand};
 use crate::use_cases::create::CreateUseCase;
 use crate::use_cases::manage::ManageUseCase;
@@ -16,27 +15,24 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Ejecuta las migraciones de la base de datos
+    /// Runs database migrations to set up the schema
     Migrate,
-    /// Crea o reclama un ShortUrl
+    /// Creates a new short URL. Optionally accepts a custom ID.
     Create {
-        /// URL de destino
         #[arg(short, long)]
         url: String,
-        /// ID personalizado (opcional)
         #[arg(short, long)]
         id: Option<String>,
     },
-    /// Lista todas las URLs registradas
+    /// Lists existing short URLs with pagination
     List {
         #[arg(short, long, default_value_t = 10)]
         limit: usize,
         #[arg(short, long, default_value_t = 0)]
         offset: usize,
     },
-    /// Elimina una URL
+    /// Deletes a short URL by its ID
     Delete {
-        /// ID del ShortUrl
         id: String,
     },
 }

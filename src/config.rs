@@ -1,4 +1,3 @@
-// src/config.rs
 use config::{Config, ConfigError};
 use std::{env, fs};
 
@@ -6,26 +5,21 @@ pub struct AppConfig {
     pub api_key: Option<String>,
     pub database_url: Option<String>,
     pub repo_file_path: Option<String>,
-    // Add more fields as needed
 }
 
 impl AppConfig {
     pub fn load() -> Result<Self, ConfigError> {
-        // Inicializa el Config principal
         let mut builder = Config::builder()
             .add_source(config::File::with_name("config/default.toml").required(false));
 
-        // Carga la ruta personalizada del config si se define
         if let Ok(path) = env::var("DWARFER_CONFIG_PATH") {
             builder = builder.add_source(config::File::with_name(&path).required(true));
         }
 
-        // Overlay de variables de entorno
         builder = builder.add_source(config::Environment::with_prefix("DWARFER").separator("_"));
 
         let config = builder.build()?;
 
-        // Docker secrets: lee *_FILE environment vars
         let mut api_key = config.get_string("api_key").ok();
         if let Ok(api_key_file) = env::var("DWARFER_API_KEY_FILE") {
             if let Ok(contents) = fs::read_to_string(api_key_file) {

@@ -46,7 +46,7 @@ pub enum ShortUrlError {
 #[test]
 fn test_short_url_validation() {
     assert!(ShortUrl::new("valid123").is_ok());
-    assert!(ShortUrl::new("INVALID").map(|value| value.as_str() == "invalid").unwrap_or(false)); // Should be normalized to lowercase
+    assert!(ShortUrl::new("INVALID").map(|value| value.as_str() == "invalid").unwrap_or(false));
     assert!(ShortUrl::new("invalid!").is_err());
     assert!(ShortUrl::new("toolong".repeat(10)).is_err());
 }

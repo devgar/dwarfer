@@ -1,4 +1,3 @@
-// src/presentation/http.rs
 use axum::{
     extract::{Path, State},
     http::{StatusCode, HeaderMap},

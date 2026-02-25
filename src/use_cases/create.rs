@@ -1,4 +1,3 @@
-// src/use_cases/create.rs
 use crate::domain::model::{ShortUrl, UrlRecord};
 use crate::domain::repository::{UrlReader, UrlWriter};
 use crate::domain::error::DomainError;
@@ -25,7 +24,6 @@ impl<RW: UrlWriter + ?Sized + 'static, RR: UrlReader + ?Sized + 'static> CreateU
         match existing {
             Some(record) => {
                 if record.long_url.is_none() {
-                    // Reclamamos el ID reservado
                     let new_record = UrlRecord {
                         id: short_id.clone(),
                         long_url: Some(url),

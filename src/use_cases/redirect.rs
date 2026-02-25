@@ -1,4 +1,3 @@
-// src/use_cases/redirect.rs
 use crate::domain::repository::UrlReader;
 use crate::domain::model::ShortUrl;
 use crate::domain::error::DomainError;
@@ -19,7 +18,6 @@ impl<R: UrlReader + ?Sized + 'static> RedirectUseCase<R> {
         match record {
             Some(r) => {
                 if let Some(url) = r.long_url {
-                    // Tracking asincrono
                     let repo_clone = self.repo.clone();
                     let short_id_clone = short_id.clone();
                     tokio::spawn(async move {

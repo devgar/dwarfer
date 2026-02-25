@@ -1,4 +1,3 @@
-// src/infrastructure/persistence/sqlite.rs
 use crate::domain::model::{ShortUrl, UrlRecord};
 use crate::domain::repository::{UrlReader, UrlWriter};
 use async_trait::async_trait;
@@ -73,7 +72,6 @@ impl UrlWriter for SqliteRepo {
     }
 }
 
-// Ejecutor de migraciones
 pub async fn run_migrations(pool: &SqlitePool) -> Result<(), sqlx::Error> {
     let _ = sqlx::query(
         "CREATE TABLE IF NOT EXISTS urls (

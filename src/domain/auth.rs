@@ -1,10 +1,9 @@
-// src/domain/auth.rs
 use async_trait::async_trait;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Principal {
     pub api_key: String,
-    pub roles: Vec<String>,  // "admin" por defecto
+    pub roles: Vec<String>,
 }
 
 #[derive(Debug, PartialEq, Eq)]

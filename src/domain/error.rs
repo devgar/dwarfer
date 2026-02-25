@@ -1,4 +1,3 @@
-// src/domain/error.rs
 use thiserror::Error;
 
 #[derive(Debug, Error)]

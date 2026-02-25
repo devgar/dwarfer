@@ -1,4 +1,3 @@
-// src/infrastructure/auth/apikey.rs
 use crate::domain::auth::{AuthenticationService, Principal, AuthError};
 use async_trait::async_trait;
 

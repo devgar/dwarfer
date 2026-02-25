@@ -1,4 +1,3 @@
-// src/domain/model.rs
 pub use crate::domain::vobjects::short_url::ShortUrl;
 use serde::Deserialize;
 
