@@ -3,6 +3,9 @@ mod config;
 mod error;
 
 mod domain {
+    pub mod vobjects {
+        pub mod short_url;
+    }
     pub mod model;
     pub mod repository;
     pub mod error;
