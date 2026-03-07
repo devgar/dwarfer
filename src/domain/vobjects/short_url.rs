@@ -1,12 +1,13 @@
-use lazy_static::lazy_static;
 use regex::Regex;
+use std::sync::LazyLock;
 
 use serde::Deserialize;
 use thiserror::Error;
 
-lazy_static! {
-    static ref SHORTURL_RE: Regex = Regex::new(r"^[a-z0-9.\-_+]{1,64}$").unwrap();
-}
+
+static SHORTURL_RE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"^[a-z0-9.\-_+]{1,64}$").unwrap()
+});
 
 #[derive(Clone, PartialEq, Eq, Hash, Debug, Deserialize)]
 pub struct ShortUrl(String);
