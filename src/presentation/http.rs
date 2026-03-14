@@ -10,6 +10,7 @@ use crate::use_cases::redirect::RedirectUseCase;
 use crate::use_cases::create::CreateUseCase;
 use crate::use_cases::manage::ManageUseCase;
 use crate::domain::auth::{AuthenticationService, AuthorizationService, Principal};
+use crate::domain::error::DomainError;
 use crate::domain::repository::{UrlReader, UrlWriter};
 use crate::domain::model::ShortUrl;
 use std::sync::Arc;
@@ -156,7 +157,18 @@ where
 
     match state.create_use_case.create_or_claim(payload.id, payload.url).await {
         Ok(short_id) => (StatusCode::CREATED, Json(short_id.as_str().to_string())).into_response(),
-        Err(e) => (StatusCode::BAD_REQUEST, e.to_string()).into_response(),
+        Err(e) => domain_error_response(e).into_response(),
+    }
+}
+
+/// Maps a DomainError to an HTTP response, exposing only client-safe messages
+fn domain_error_response(e: DomainError) -> (StatusCode, String) {
+    match e {
+        DomainError::InvalidInput(msg) => (StatusCode::BAD_REQUEST, msg),
+        DomainError::Conflict(msg) => (StatusCode::CONFLICT, msg),
+        DomainError::NotFound => (StatusCode::NOT_FOUND, "Not found".to_string()),
+        DomainError::Unauthorized => (StatusCode::UNAUTHORIZED, "Unauthorized".to_string()),
+        DomainError::Other(_) => (StatusCode::INTERNAL_SERVER_ERROR, "Internal server error".to_string()),
     }
 }
 
