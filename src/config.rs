@@ -16,7 +16,7 @@ impl AppConfig {
             builder = builder.add_source(config::File::with_name(&path).required(true));
         }
 
-        builder = builder.add_source(config::Environment::with_prefix("DWARFER").separator("_"));
+        builder = builder.add_source(config::Environment::with_prefix("DWARFER"));
 
         let config = builder.build()?;
 

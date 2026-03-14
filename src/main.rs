@@ -71,9 +71,10 @@ async fn main() -> anyhow::Result<()> {
         panic!("Debe activarse al menos una feature de repositorio (ej: repo-sqlite)");
     }
 
-    let api_key = config.api_key.as_deref().unwrap_or("default_api_key");
+    let api_key = config.api_key.clone()
+        .ok_or(crate::error::AppError::ConfigMissingError("api_key".to_string()))?;
     let auth_service = Arc::new(crate::infrastructure::auth::apikey::StaticApiKeyService {
-        valid_api_key: api_key.to_string(),
+        valid_api_key: api_key,
     });
     let auth_z_service = Arc::new(crate::infrastructure::auth::authorization_simple::AllowAllAuthorizationService);
 
